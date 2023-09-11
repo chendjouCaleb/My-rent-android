@@ -161,15 +161,9 @@ fun SelectLangBottomSheet(viewModel: WelcomePageViewModel) {
     ) {
         Surface {
             Column {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-
-                        .padding(start = 16.dp, bottom = 8.dp),
+                Row(Modifier.fillMaxWidth().padding(start = 32.dp, bottom = 12.dp),
                     verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { viewModel.showLangPicker = false }) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "")
-                    }
+
                     Text(
                         text = "Choisir une langue", style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
