@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.regolia.myrent.pages.CountryListPicker
 import com.regolia.myrent.pages.WelcomePage
 import com.regolia.myrent.ui.theme.MyRentTheme
 
@@ -24,7 +25,8 @@ class MainActivity : ComponentActivity() {
             MyRentTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    WelcomePage()
+                    MainNavGraph()
+                    //CountryListPicker()
                 }
 
             }

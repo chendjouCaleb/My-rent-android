@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,8 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.regolia.myrent.pages.identity.login.Channel
-import com.regolia.myrent.pages.identity.login.channels
+import com.regolia.myrent.identity.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -54,7 +52,7 @@ fun AuthenticationChannelPicker(
         ModalBottomSheet(sheetState = sheetState, onDismissRequest = {
             state.value = false
         }) {
-            channels.forEach { channel ->
+            Channel.all.forEach { channel ->
                 val selected = selectedChannel.id == channel.id
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

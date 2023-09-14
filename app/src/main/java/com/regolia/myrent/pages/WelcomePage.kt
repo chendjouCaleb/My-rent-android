@@ -1,6 +1,5 @@
 package com.regolia.myrent.pages
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,14 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
@@ -38,16 +34,15 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.regolia.myrent.R
 import com.regolia.myrent.helpers.Lang
 import com.regolia.myrent.ui.theme.Gray100
-import com.regolia.myrent.ui.theme.MyRentTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -69,7 +64,7 @@ class WelcomePageViewModel : ViewModel() {
 
 
 @Composable()
-fun WelcomePage() {
+fun WelcomePage(navController: NavController) {
     val viewModel = viewModel { WelcomePageViewModel() }
     Column(modifier = Modifier.padding(32.dp)) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
@@ -91,7 +86,9 @@ fun WelcomePage() {
             Spacer(modifier = Modifier.height(48.dp))
 
             Row() {
-                Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
+                Button(onClick = {
+                    navController.navigate("register")
+                }, modifier = Modifier.weight(1f)) {
                     Text(text = "Créer un compte")
                 }
             }
@@ -119,7 +116,9 @@ fun WelcomePage() {
             Text(text = "Vous possédez déjà un compte ?")
             Spacer(modifier = Modifier.height(16.dp))
             Row {
-                OutlinedButton(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
+                OutlinedButton(onClick = {
+                    navController.navigate("login")
+                }, modifier = Modifier.weight(1f)) {
                     Text(text = "Se connecter")
                 }
             }
@@ -137,7 +136,10 @@ fun WelcomePage() {
                     painter = painterResource(R.drawable.baseline_language_24),
                     contentDescription = ""
                 )
-                Text(text = viewModel.getSelectedLang().title, modifier = Modifier.padding(horizontal = 8.dp))
+                Text(
+                    text = viewModel.getSelectedLang().title,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
                 Icon(
                     painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
                     contentDescription = ""
@@ -154,15 +156,20 @@ fun WelcomePage() {
 fun SelectLangBottomSheet(viewModel: WelcomePageViewModel) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    ModalBottomSheet(sheetState = sheetState,
+    ModalBottomSheet(
+        sheetState = sheetState,
         onDismissRequest = {
             viewModel.showLangPicker = false
         },
     ) {
         Surface {
             Column {
-                Row(Modifier.fillMaxWidth().padding(start = 32.dp, bottom = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 32.dp, bottom = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
                     Text(
                         text = "Choisir une langue", style = MaterialTheme.typography.titleLarge,
@@ -177,20 +184,23 @@ fun SelectLangBottomSheet(viewModel: WelcomePageViewModel) {
                         Row(
                             Modifier
                                 .selectable(selected = viewModel.selectedLangId == lang.id,
-                                onClick = {
-                                    viewModel.selectedLangId = lang.id
+                                    onClick = {
+                                        viewModel.selectedLangId = lang.id
 
-                                    scope.launch {
-                                        delay(300)
-                                        sheetState.hide()
-                                    }.invokeOnCompletion {
-                                        if (!sheetState.isVisible) {
-                                            viewModel.showLangPicker = false
-                                        }
-                                    }
-                                })
+                                        scope
+                                            .launch {
+                                                delay(300)
+                                                sheetState.hide()
+                                            }
+                                            .invokeOnCompletion {
+                                                if (!sheetState.isVisible) {
+                                                    viewModel.showLangPicker = false
+                                                }
+                                            }
+                                    })
                                 .padding(vertical = 8.dp, horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically) {
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             RadioButton(
                                 selected = viewModel.selectedLangId == lang.id,
                                 onClick = { /*TODO*/ })
@@ -198,7 +208,8 @@ fun SelectLangBottomSheet(viewModel: WelcomePageViewModel) {
                             Column(Modifier.weight(1f)) {
                                 Text(text = lang.title, style = MaterialTheme.typography.bodyMedium)
                                 Text(
-                                    text = lang.intTitle, style = MaterialTheme.typography.bodySmall,
+                                    text = lang.intTitle,
+                                    style = MaterialTheme.typography.bodySmall,
                                     modifier = Modifier.alpha(.7f)
                                 )
                             }
@@ -208,13 +219,5 @@ fun SelectLangBottomSheet(viewModel: WelcomePageViewModel) {
                 Spacer(modifier = Modifier.height(64.dp))
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WelcomePagePreview() {
-    MyRentTheme {
-        WelcomePage()
     }
 }
