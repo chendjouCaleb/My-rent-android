@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.regolia.myrent.R
+import com.regolia.myrent.pages.identity.AuthenticationChannelPicker
 import com.regolia.myrent.pages.identity.login.EmailPage
 import com.regolia.myrent.pages.identity.shared.PhoneNumberPage
 import com.regolia.myrent.pages.identity.shared.TelegramNumberPage
@@ -28,7 +29,7 @@ import com.regolia.myrent.pages.identity.shared.WhatsAppNumberPage
 
 @Composable
 fun RegisterChannelPage(viewModel: RegisterViewModel) {
-    Column(Modifier.fillMaxWidth()) {
+    Column(Modifier.fillMaxWidth().padding(16.dp)) {
 
         Row {
             FilledTonalButton(onClick = {
@@ -51,7 +52,7 @@ fun RegisterChannelPage(viewModel: RegisterViewModel) {
         }
 
         Text(
-            text = "Vous pouvez choisir un autre moyen de connection",
+            text = "Vous pouvez choisir un autre moyen de vérification",
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.alpha(.5f)
         )
@@ -59,20 +60,29 @@ fun RegisterChannelPage(viewModel: RegisterViewModel) {
         Spacer(modifier = Modifier.height(32.dp))
 
         when (viewModel.selectedChannel.id) {
-            "email" -> { EmailPage({viewModel.userId = it})  }
-            "whatsapp" -> {  WhatsAppNumberPage({viewModel.userId = it})  }
-            "telegram" -> {  TelegramNumberPage({viewModel.userId = it})  }
-            "phone" -> { PhoneNumberPage({viewModel.userId = it}) }
+            "email" -> { EmailPage({viewModel.contact = it})  }
+            "whatsapp" -> {  WhatsAppNumberPage({viewModel.contact = it})  }
+            "telegram" -> {  TelegramNumberPage({viewModel.contact = it})  }
+            "phone" -> { PhoneNumberPage({viewModel.contact = it}) }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-        Text(text = viewModel.userId)
+        Text(text = viewModel.contact)
 
         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
             Button(onClick = { viewModel.nav.navigate("verify") }) {
                 Text(text = "Suivant")
             }
         }
+
+        AuthenticationChannelPicker(
+            onSelected = {
+                viewModel.selectedChannel = it
+                viewModel.contact = ""
+            },
+            selectedChannel = viewModel.selectedChannel,
+            state = viewModel.showChannelPicker
+        )
 
     }
 }
