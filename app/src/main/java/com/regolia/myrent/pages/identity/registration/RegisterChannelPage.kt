@@ -19,17 +19,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import com.regolia.myrent.R
+import com.regolia.myrent.http.HttpModule
+import com.regolia.myrent.identity.UserHttpClient
+import com.regolia.myrent.identity.services.UserService
 import com.regolia.myrent.pages.identity.AuthenticationChannelPicker
+import com.regolia.myrent.pages.identity.alert.CheckContactAlert
 import com.regolia.myrent.pages.identity.login.EmailPage
 import com.regolia.myrent.pages.identity.shared.PhoneNumberPage
 import com.regolia.myrent.pages.identity.shared.TelegramNumberPage
 import com.regolia.myrent.pages.identity.shared.WhatsAppNumberPage
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun RegisterChannelPage(viewModel: RegisterViewModel) {
-    Column(Modifier.fillMaxWidth().padding(16.dp)) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp)) {
 
         Row {
             FilledTonalButton(onClick = {
@@ -60,21 +69,31 @@ fun RegisterChannelPage(viewModel: RegisterViewModel) {
         Spacer(modifier = Modifier.height(32.dp))
 
         when (viewModel.selectedChannel.id) {
-            "email" -> { EmailPage({viewModel.contact = it})  }
-            "whatsapp" -> {  WhatsAppNumberPage({viewModel.contact = it})  }
-            "telegram" -> {  TelegramNumberPage({viewModel.contact = it})  }
-            "phone" -> { PhoneNumberPage({viewModel.contact = it}) }
+            "email" -> { EmailPage { viewModel.contact = it }  }
+            "whatsapp" -> {  WhatsAppNumberPage { viewModel.contact = it } }
+            "telegram" -> {  TelegramNumberPage { viewModel.contact = it } }
+            "phone" -> { PhoneNumberPage { viewModel.contact = it } }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-        Text(text = viewModel.contact)
 
-        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { viewModel.nav.navigate("verify") }) {
+        Row() {
+            Button(modifier = Modifier.weight(1f), onClick = {
+                viewModel.viewModelScope.launch {
+                    val isUsed = viewModel.checkContact()
+                    if(!isUsed) {
+                        viewModel.sendCode()
+                        viewModel.nav.navigate("verify")
+                    }
+                }
+            }) {
                 Text(text = "Suivant")
             }
         }
 
+        CheckContactAlert(state = viewModel.checkContactWaiting) {
+            Text(text = "Vérification du contact", style = MaterialTheme.typography.bodyMedium)
+        }
         AuthenticationChannelPicker(
             onSelected = {
                 viewModel.selectedChannel = it

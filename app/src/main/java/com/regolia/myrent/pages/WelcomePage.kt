@@ -42,11 +42,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.regolia.myrent.R
 import com.regolia.myrent.helpers.Lang
+import com.regolia.myrent.http.HttpModule
+import com.regolia.myrent.identity.UserHttpClient
+import com.regolia.myrent.identity.services.UserService
 import com.regolia.myrent.ui.theme.Gray100
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class WelcomePageViewModel : ViewModel() {
+
     val langs = listOf<Lang>(
         Lang("Français", "Français", "fr"),
         Lang("English", "Anglais", "en"),

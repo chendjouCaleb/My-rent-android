@@ -33,7 +33,7 @@ fun RegistrationPage() {
 Scaffold(
     topBar = { TopAppBar(title = {Text("Créer un compte")},
     navigationIcon = {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { viewModel.nav.popBackStack() }) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
         }
     }) })
