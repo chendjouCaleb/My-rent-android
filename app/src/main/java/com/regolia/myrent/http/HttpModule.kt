@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
+import com.regolia.myrent.identity.services.AuthenticationData
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,9 +23,9 @@ class HttpModule {
          private var _retrofit: Retrofit? = null
 
 
-        fun create(application: Application) {
+        fun create(application: Application, authenticationData: AuthenticationData) {
             if(_instance == null){
-                _instance = HttpModule()
+                _instance = HttpModule(authenticationData)
             }
         }
 
@@ -35,14 +36,16 @@ class HttpModule {
 
     }
 
-    constructor() {
+    constructor(authenticationData: AuthenticationData) {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 
+        val accessTokenInterceptor = AccessTokenInterceptor(authenticationData)
 
         val okHttpClient = OkHttpClient()
             .newBuilder() // .addInterceptor(new BearerTokenInterceptor(accessToken))
             .addInterceptor(logging)
+            .addInterceptor(accessTokenInterceptor)
             .build()
 
         val timeModule = JavaTimeModule()

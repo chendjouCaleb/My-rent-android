@@ -1,7 +1,6 @@
 package com.regolia.myrent.pages.identity.registration
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,9 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.regolia.myrent.R
-import com.regolia.myrent.http.HttpModule
-import com.regolia.myrent.identity.UserHttpClient
-import com.regolia.myrent.identity.services.UserService
 import com.regolia.myrent.pages.identity.AuthenticationChannelPicker
 import com.regolia.myrent.pages.identity.alert.CheckContactAlert
 import com.regolia.myrent.pages.identity.login.EmailPage
@@ -34,12 +30,8 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun RegisterChannelPage(viewModel: RegisterViewModel) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .padding(16.dp)) {
-
+fun RegisterContactPage(viewModel: RegisterViewModel) {
+    Column(Modifier.fillMaxWidth().padding(16.dp)) {
         Row {
             FilledTonalButton(onClick = {
                 viewModel.showChannelPicker.value = true

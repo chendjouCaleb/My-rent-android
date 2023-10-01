@@ -16,10 +16,7 @@ import com.regolia.myrent.identity.models.UserCodeVerifyModel
 import com.regolia.myrent.identity.services.UserService
 
 class RegisterViewModel : ViewModel() {
-    var userService = UserService(
-        HttpModule.instance().retrofit().create(UserHttpClient::class.java),
-        HttpModule.instance().retrofit().create(UserCodeHttpClient::class.java)
-    )
+    var userService = UserService(HttpModule.instance().retrofit())
 
     suspend fun checkContact(): Boolean {
         this.checkContactWaiting.value = true

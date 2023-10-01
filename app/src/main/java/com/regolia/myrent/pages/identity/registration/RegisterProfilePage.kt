@@ -22,14 +22,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegisterProfilePage(viewModel: RegisterViewModel) {
     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-
         Text(
             text = "Compléter votre profil",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )
-
-
 
         Spacer(modifier = Modifier.height(32.dp))
 

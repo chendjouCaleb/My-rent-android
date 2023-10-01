@@ -6,6 +6,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.regolia.myrent.pages.WelcomePage
+import com.regolia.myrent.pages.home.HomePage
 import com.regolia.myrent.pages.identity.login.LoginPage
 import com.regolia.myrent.pages.identity.registration.RegistrationPage
 
@@ -20,13 +21,16 @@ fun MainNavGraph() {
         }
 
         composable("login") {
-            LoginPage()
+            LoginPage(navController)
         }
 
         composable("register") {
             RegistrationPage()
         }
 
+        composable("home") {
+            HomePage(navController)
+        }
 
     }
 }

@@ -1,5 +1,6 @@
 package com.regolia.myrent.pages.identity.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,16 +18,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import com.regolia.myrent.R
+import com.regolia.myrent.pages.identity.alert.CheckContactAlert
 import com.regolia.myrent.pages.identity.shared.PhoneNumberPage
 import com.regolia.myrent.pages.identity.shared.TelegramNumberPage
 import com.regolia.myrent.pages.identity.shared.WhatsAppNumberPage
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginChannelPage(viewModel: LoginPageViewModel) {
+fun LoginContactPage(viewModel: LoginPageViewModel) {
     Column(Modifier.fillMaxWidth()) {
 
         Row {
@@ -58,20 +63,33 @@ fun LoginChannelPage(viewModel: LoginPageViewModel) {
         Spacer(modifier = Modifier.height(32.dp))
 
         when (viewModel.selectedChannel.id) {
-            "email" -> { EmailPage({viewModel.userId = it})  }
-            "whatsapp" -> {  WhatsAppNumberPage({viewModel.userId = it})  }
-            "telegram" -> {  TelegramNumberPage({viewModel.userId = it})  }
-            "phone" -> { PhoneNumberPage({viewModel.userId = it}) }
+            "email" -> { EmailPage({viewModel.contact = it})  }
+            "whatsapp" -> {  WhatsAppNumberPage({viewModel.contact = it})  }
+            "telegram" -> {  TelegramNumberPage({viewModel.contact = it})  }
+            "phone" -> { PhoneNumberPage({viewModel.contact = it}) }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-        Text(text = viewModel.userId)
 
+        var context = LocalContext.current
         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { viewModel.nav.navigate("verify") }) {
+            Button(onClick = {
+                viewModel.viewModelScope.launch {
+                    val isUsed = viewModel.checkContactExists()
+                    if(isUsed) {
+                        viewModel.nav.navigate("verify")
+                    }else {
+                        Toast.makeText(context, "Compte inexistant", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }) {
                 Text(text = "Suivant")
             }
         }
 
+        CheckContactAlert(state = viewModel.checkContactWaiting) {
+            Text(text = "Vérification du contact", style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }

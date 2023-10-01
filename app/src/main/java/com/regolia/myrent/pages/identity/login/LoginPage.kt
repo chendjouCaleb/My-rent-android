@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -22,9 +23,10 @@ import com.regolia.myrent.ui.theme.MyRentTheme
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun LoginPage() {
+fun LoginPage(navController: NavController) {
     val viewModel = viewModel { LoginPageViewModel() }
     viewModel.nav = rememberAnimatedNavController()
+    viewModel.globalNav = navController
     Column(
         Modifier
             .fillMaxSize()
@@ -36,9 +38,9 @@ fun LoginPage() {
         Spacer(modifier = Modifier.height(32.dp))
 
 
-        AnimatedNavHost(navController = viewModel.nav, startDestination = "channel") {
-            composable("channel") {
-                LoginChannelPage(viewModel)
+        AnimatedNavHost(navController = viewModel.nav, startDestination = "contact") {
+            composable("contact") {
+                LoginContactPage(viewModel)
             }
 
             composable("verify") {
@@ -50,7 +52,7 @@ fun LoginPage() {
         AuthenticationChannelPicker(
             onSelected = {
                 viewModel.selectedChannel = it
-                viewModel.userId = ""
+                viewModel.contact = ""
             },
             selectedChannel = viewModel.selectedChannel,
             state = viewModel.showChannelPicker
@@ -64,7 +66,7 @@ fun LoginPage() {
 @Preview(showBackground = true)
 fun LoginPagePreview() {
     MyRentTheme {
-        LoginPage()
+        //LoginPage()
     }
 }
 
