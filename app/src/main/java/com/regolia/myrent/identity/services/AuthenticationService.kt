@@ -9,7 +9,7 @@ import com.regolia.myrent.identity.models.UserCodeAddModel
 import retrofit2.Retrofit
 import retrofit2.http.Body
 
-class AuthenticationService(private var retrofit: Retrofit, private var authenticationData: AuthenticationData) {
+class AuthenticationService(retrofit: Retrofit, authenticationData: AuthenticationData) {
     companion object {
         private lateinit var _instance: AuthenticationService
 
@@ -32,6 +32,10 @@ class AuthenticationService(private var retrofit: Retrofit, private var authenti
         sharedPreferences = authenticationData.sharedPreferences
         authenticationHttpClient = retrofit.create(AuthenticationHttpClient::class.java)
 
+    }
+
+    fun isLoggedIn(): Boolean {
+        return session != null
     }
 
 

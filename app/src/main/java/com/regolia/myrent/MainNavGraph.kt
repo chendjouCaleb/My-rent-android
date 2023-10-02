@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.regolia.myrent.identity.services.AuthenticationService
 import com.regolia.myrent.pages.WelcomePage
 import com.regolia.myrent.pages.home.HomePage
 import com.regolia.myrent.pages.identity.login.LoginPage
@@ -14,8 +15,11 @@ import com.regolia.myrent.pages.identity.registration.RegistrationPage
 @Composable
 fun MainNavGraph() {
     val navController = rememberAnimatedNavController()
+    val auth = AuthenticationService.instance()
 
-    AnimatedNavHost(navController, startDestination = "welcome") {
+    val startUrl = if(auth.isLoggedIn()) "home" else "welcome"
+
+    AnimatedNavHost(navController, startDestination = startUrl) {
         composable("welcome") {
             WelcomePage(navController)
         }
