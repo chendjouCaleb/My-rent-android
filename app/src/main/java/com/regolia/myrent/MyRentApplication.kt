@@ -14,17 +14,23 @@ class MyRentApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        var authenticationData = AuthenticationData(this)
+        val authenticationData = AuthenticationData(this)
         HttpModule.create(this, authenticationData)
 
-        var retrofit = HttpModule.instance().retrofit()
-        var spaceHttpClient = retrofit.create(SpaceHttpClient::class.java)
+        val retrofit = HttpModule.instance().retrofit()
+        val spaceHttpClient = retrofit.create(SpaceHttpClient::class.java)
 
-        AuthenticationService.create(retrofit, authenticationData)
+        val auth = AuthenticationService.create(retrofit, authenticationData)
+
 
         CoroutineScope(Dispatchers.IO).launch {
-            var spaces = spaceHttpClient.list()
+
+            val spaces = spaceHttpClient.list()
             Log.d("APPLICATION", "Space count: ${spaces.size}")
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            auth.init()
         }
 
     }

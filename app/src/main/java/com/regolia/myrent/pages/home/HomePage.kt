@@ -2,9 +2,11 @@ package com.regolia.myrent.pages.home
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +28,7 @@ fun HomePage(nav: NavController) {
     HomePageScaffold(viewModel) {
         Text(text = AuthenticationService.instance().message())
     }
+    HomePageMenu(viewModel)
 }
 
 
@@ -33,23 +36,40 @@ fun HomePage(nav: NavController) {
 @Composable
 fun HomePageScaffold(viewModel: HomePageViewModel, content: @Composable () -> Unit) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("MyRent") },
-            navigationIcon = {
-                IconButton(onClick = { viewModel.nav.popBackStack() }) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+        topBar = {
+            TopAppBar(title = { Text("MyRent") },
+                navigationIcon = {
+                    IconButton(onClick = { viewModel.nav.popBackStack() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { viewModel.expandMenu = true }) {
+                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "")
+                    }
+
+
                 }
-            },
-            actions = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = "")
-                }
-            }
-            ) })
+            )
+        })
     {
-        Surface(modifier = Modifier
-            .padding(it)
-            .fillMaxSize()) {
+        Surface(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
             content()
+        }
+    }
+}
+
+@Composable
+fun HomePageMenu(viewModel: HomePageViewModel) {
+    DropdownMenu(
+        expanded = viewModel.expandMenu,
+        onDismissRequest = { viewModel.expandMenu = false }) {
+        DropdownMenuItem(onClick = { /*TODO*/ }) {
+            Text(text = "Paramètres")
         }
     }
 }

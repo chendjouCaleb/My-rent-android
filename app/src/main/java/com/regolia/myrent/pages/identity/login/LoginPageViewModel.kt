@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.regolia.myrent.R
 import com.regolia.myrent.http.HttpModule
 import com.regolia.myrent.identity.Channel
 import com.regolia.myrent.identity.models.LoginModel
@@ -17,7 +15,7 @@ import com.regolia.myrent.identity.services.AuthenticationService
 import com.regolia.myrent.identity.services.UserService
 
 
-class LoginPageViewModel() : ViewModel() {
+class LoginPageViewModel : ViewModel() {
     var userService = UserService(HttpModule.instance().retrofit())
     private var authenticationService = AuthenticationService.instance()
 

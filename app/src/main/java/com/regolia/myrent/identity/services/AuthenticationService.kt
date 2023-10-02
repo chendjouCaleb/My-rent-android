@@ -1,7 +1,9 @@
 package com.regolia.myrent.identity.services
 
 import android.content.SharedPreferences
+import androidx.lifecycle.MutableLiveData
 import com.regolia.myrent.identity.AuthenticationHttpClient
+import com.regolia.myrent.identity.entities.Session
 import com.regolia.myrent.identity.models.LoginModel
 import com.regolia.myrent.identity.models.UserCodeAddModel
 import retrofit2.Retrofit
@@ -11,8 +13,9 @@ class AuthenticationService(private var retrofit: Retrofit, private var authenti
     companion object {
         private lateinit var _instance: AuthenticationService
 
-       fun create(retrofit: Retrofit, authenticationData: AuthenticationData) {
-            this._instance = AuthenticationService(retrofit, authenticationData)
+       fun create(retrofit: Retrofit, authenticationData: AuthenticationData): AuthenticationService {
+           _instance = AuthenticationService(retrofit, authenticationData)
+           return _instance
         }
 
         fun instance(): AuthenticationService {
@@ -20,8 +23,10 @@ class AuthenticationService(private var retrofit: Retrofit, private var authenti
         }
     }
 
+    var session: Session? = null
     var sharedPreferences: SharedPreferences
     var authenticationHttpClient: AuthenticationHttpClient
+    var isInitState = MutableLiveData<Boolean>()
 
     init {
         sharedPreferences = authenticationData.sharedPreferences
@@ -35,17 +40,21 @@ class AuthenticationService(private var retrofit: Retrofit, private var authenti
         with(sharedPreferences.edit()) {
             putString("ACCESS_TOKEN", result.token)
             putString("SESSION_ID", result.session.id)
+
+            commit()
         }
+
     }
 
     suspend fun init() {
         val sessionId = sharedPreferences.getString("SESSION_ID", "")
         if(sessionId == "") {
+            this.isInitState.value = true
             return
         }
 
-        var session = authenticationHttpClient.LoggedSession()
-
+        session = authenticationHttpClient.LoggedSession()
+        isInitState.value = true
     }
 
     fun message(): String {
