@@ -98,7 +98,7 @@ fun FluentOutlinedTextField(
         ) {
 
             if(leadingIcon != null) {
-                leadingIcon
+                leadingIcon()
                 Spacer(modifier = Modifier.width(8.dp))
             }
 

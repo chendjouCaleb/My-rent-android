@@ -10,6 +10,7 @@ import com.regolia.myrent.pages.WelcomePage
 import com.regolia.myrent.pages.home.HomePage
 import com.regolia.myrent.pages.identity.login.LoginPage
 import com.regolia.myrent.pages.identity.registration.RegistrationPage
+import com.regolia.myrent.pages.spaces.add.SpaceAddPage
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -34,6 +35,10 @@ fun MainNavGraph() {
 
         composable("home") {
             HomePage(navController)
+        }
+
+        composable("spaces/add") {
+            SpaceAddPage(navController)
         }
 
     }
